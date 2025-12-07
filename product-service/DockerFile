@@ -1,0 +1,24 @@
+# Stage 1: Build
+FROM maven:3.9.10-eclipse-temurin-21 AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+COPY base-domains/pom.xml ./base-domains/
+COPY product-service/pom.xml ./product-service/
+
+COPY base-domains/src ./base-domains/src
+COPY product-service/src ./product-service/src
+
+RUN mvn clean package -DskipTests --no-transfer-progress
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# Copy the final product-service JAR (already includes base-domains)
+COPY --from=build /app/product-service/target/product-service-*.jar product-service.jar
+
+EXPOSE 8087
+ENTRYPOINT ["java", "-jar", "product-service.jar"]

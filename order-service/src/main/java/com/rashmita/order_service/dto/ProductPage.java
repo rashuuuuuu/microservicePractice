@@ -1,0 +1,19 @@
+package com.rashmita.order_service.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductPage {
+    private List<Product> content;
+    private int totalPages;
+    private long totalElements;
+    private int size;
+    private int page;
+    private boolean empty;
+}
